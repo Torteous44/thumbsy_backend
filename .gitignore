@@ -1,0 +1,46 @@
+# Python bytecode files
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environment
+venv/
+.env
+
+# Node modules (if using for frontend or testing)
+node_modules/
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Dependency directories
+*.egg-info/
+dist/
+build/
+
+# Docker
+*.log
+*.pid
+
+# Environment files
+.env
+*.env
+
+# Configuration files
+*.json
+*.yml
+*.yaml
+
+# FastAPI and Uvicorn logs
+*.log
+
+# Pytest cache
+.cache/
+
+# Kubernetes and Docker-related files
+*.dockerfile
+docker-compose.override.yml
+
+
+
