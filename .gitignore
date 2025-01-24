@@ -41,6 +41,3 @@ build/
 # Kubernetes and Docker-related files
 *.dockerfile
 docker-compose.override.yml
-
-
-

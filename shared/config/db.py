@@ -1,21 +1,41 @@
+# shared/config/db.py
 import os
-from databases import Database
-from dotenv import load_dotenv
+from sqlalchemy import create_engine, text, event
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.pool import NullPool
+from urllib.parse import quote_plus
 
-# Load environment variables from the .env file
-load_dotenv()
+# Database connection settings
+DB_USER = os.getenv("DB_USER", "thumbsy_user")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "Matt.4483")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+DB_NAME = os.getenv("DB_NAME", "thumbsy_db")
 
-# Fetch the DATABASE_URL from environment variables
-DATABASE_URL = os.getenv("DATABASE_URL")
+# Include options in the connection URLs
+DATABASE_URL = (
+    f"postgresql://{DB_USER}:{quote_plus(DB_PASSWORD)}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+)
 
-# Initialize the database connection
-database = Database(DATABASE_URL)
+print(f"Attempting to connect to database: {DATABASE_URL}")
 
-# Function to connect to the database
-async def connect_db():
-    await database.connect()
+engine = create_engine(
+    DATABASE_URL,
+    pool_pre_ping=True,
+    echo=True,
+)
 
-# Function to disconnect from the database
-async def disconnect_db():
-    await database.disconnect()
+# Create session factory
+SessionLocal = sessionmaker(
+    bind=engine,
+    expire_on_commit=False
+)
 
+# Database dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
